@@ -50,17 +50,23 @@ public class DALSKAITLIS {
 
     }
 
-    private String skait = "";
-    private String sauc = "";
+    //    private String skait = "";
+//    private String sauc = "";
+//    private String sign = "";
+    private LielsSkaitlis skait;
+    private LielsSkaitlis sauc;
     private String sign = "";
 
     public DALSKAITLIS(String skait, String sauc) {
 
-        LielsSkaitlis lielsSkaitlis = new LielsSkaitlis(skait);
-        String gcd = lielsSkaitlis.findGcd(skait, sauc);
+//        LielsSkaitlis lielsSkaitlis = new LielsSkaitlis(skait);
+//        String gcd = lielsSkaitlis.findGcd(skait, sauc);
+        this.skait = new LielsSkaitlis(skait);
+        this.sauc = new LielsSkaitlis(sauc);
 
-        this.skait = lielsSkaitlis.divide(lielsSkaitlis.getLielsSkaitlis(), gcd)[0];
-        this.sauc = lielsSkaitlis.divide(sauc, gcd)[0];
+
+//        this.skait = lielsSkaitlis.divide(lielsSkaitlis.getLielsSkaitlis(), gcd)[0];
+//        this.sauc = lielsSkaitlis.divide(sauc, gcd)[0];
 
         if (skait.charAt(0) == '-' && sauc.charAt(0) != '-' || skait.charAt(0) != '-' && sauc.charAt(0) == '-') {
             sign = "-";
@@ -68,27 +74,42 @@ public class DALSKAITLIS {
     }
 
     public DALSKAITLIS(String sk) {
-        this.skait = sk;
-        this.sauc = "1";
+//        this.skait = sk;
+//        this.sauc = "1";
 
         if (sk.charAt(0) == '-') {
             sign = "-";
         }
     }
 
-    private String getLcd(String number1, String number2){
-
-
-
-        return "";
+    public LielsSkaitlis getSkait(){
+        return this.skait;
     }
+
+    public LielsSkaitlis getSauc(){
+        return this.sauc;
+    }
+//    private String getLcd(String number1, String number2) {
+//        //String gcd = this.skait.findGcd(this.sauc);
+//
+//
+//        return "";
+//    }
+
     public boolean isEqual(DALSKAITLIS d) {
-        return d.getDalSkaitlis()[0] == this.skait && d.getDalSkaitlis()[1] == this.sauc;
+        String gcdForThisDalSk = this.skait.findGcd(this.sauc);
+        String gcdForInputDalSk = d.getSkait().findGcd(d.getSauc());
+//        LielsSkaitlis currenSimplSkait = this.skait.divide(new LielsSkaitlis(gcdForThisDalSk));
+//        LielsSkaitlis currenSimplSauc = this.sauc.divide(new LielsSkaitlis(gcdForThisDalSk));
+//        LielsSkaitlis inputSimplSkait = d.getSkait().divide(new LielsSkaitlis(gcdForInputDalSk));
+//        LielsSkaitlis inputSimplSauc = d.getSauc().divide(new LielsSkaitlis(gcdForInputDalSk));
+        return true;
+//        return d.getDalSkaitlis()[0] == this.skait && d.getDalSkaitlis()[1] == this.sauc;
     }
 
     public boolean isGreater(DALSKAITLIS d) {
-
-        return d.getDalSkaitlis()[0] == this.skait && d.getDalSkaitlis()[1] == this.sauc;
+        return true;
+//        return d.getDalSkaitlis()[0] == this.skait && d.getDalSkaitlis()[1] == this.sauc;
     }
 
     public void add(DALSKAITLIS d) {
@@ -104,7 +125,7 @@ public class DALSKAITLIS {
     }
 
     public String[] getDalSkaitlis() {
-        return new String[]{this.skait, this.sauc};
+        return new String[]{this.skait.getLielsSkaitlis(), this.sauc.getLielsSkaitlis()};
     }
 }
 //

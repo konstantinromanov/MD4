@@ -74,7 +74,7 @@ class LielsSkaitlis {
         if (isResultValid()) {
             char[] charArr = sk.toCharArray();
             _sign = (charArr[0] != '-') ? "" : "-";
-            int[] intArray = new int[_sign.equals("") ? charArr.length: charArr.length - 1];
+            int[] intArray = new int[_sign.equals("") ? charArr.length : charArr.length - 1];
 
             for (int i = (_sign.equals("") ? 0 : 1), j = 0; i < charArr.length; i++, j++) {
                 intArray[j] = Integer.parseInt(String.valueOf(charArr[i]));
@@ -134,7 +134,7 @@ class LielsSkaitlis {
                 sum = n1 - (n2 + carry);
                 carry = 0;
             } else {
-                sum =  10 + n1 - (n2 + carry);
+                sum = 10 + n1 - (n2 + carry);
                 carry = 1;
             }
 
@@ -162,7 +162,7 @@ class LielsSkaitlis {
 
     private boolean hasEqualAbsoluteValues(int[] sk2, int[] sk1) {
 
-        if (sk1.length == sk2.length){
+        if (sk1.length == sk2.length) {
             for (int i = 0; i < sk1.length; i++) {
                 if (sk1[i] != sk2[i]) {
                     return false;
@@ -197,16 +197,34 @@ class LielsSkaitlis {
         return isThisBigger;
     }
 
-    public String findGcd(String sk, String dal){
+//    public String findGcd(String sk, String dal){
+//
+//        int[] arr1 = createIntArray(sk);
+//        int[] arr2 = createIntArray(dal);
+//
+//        while(!hasEqualAbsoluteValues(arr1, arr2)){
+//            if (hasBiggerAbsoluteValue(arr1, arr2)){
+//                String dif = new StringBuffer(processSub(arr1, arr2)).reverse().toString().replaceFirst("^0+(?!$)", "");
+//                arr1 = createIntArray(dif);
+//            }else{
+//                String dif = new StringBuffer(processSub(arr2, arr1)).reverse().toString().replaceFirst("^0+(?!$)", "");
+//                arr2 = createIntArray(dif);
+//            }
+//        }
+//        String strOfInts = Arrays.toString(arr1).replaceAll("\\[|\\]|,|\\s", "");
+//        return strOfInts;
+//    }
 
-        int[] arr1 = createIntArray(sk);
-        int[] arr2 = createIntArray(dal);
+    public String findGcd(LielsSkaitlis dal) {
 
-        while(!hasEqualAbsoluteValues(arr1, arr2)){
-            if (hasBiggerAbsoluteValue(arr1, arr2)){
+        int[] arr1 = this._intArray;
+        int[] arr2 = dal.getLielsSkaitlisArray();
+
+        while (!hasEqualAbsoluteValues(arr1, arr2)) {
+            if (hasBiggerAbsoluteValue(arr1, arr2)) {
                 String dif = new StringBuffer(processSub(arr1, arr2)).reverse().toString().replaceFirst("^0+(?!$)", "");
                 arr1 = createIntArray(dif);
-            }else{
+            } else {
                 String dif = new StringBuffer(processSub(arr2, arr1)).reverse().toString().replaceFirst("^0+(?!$)", "");
                 arr2 = createIntArray(dif);
             }
@@ -215,20 +233,33 @@ class LielsSkaitlis {
         return strOfInts;
     }
 
-    public String[] divide(String sk, String dal){
+    public LielsSkaitlis divide(LielsSkaitlis dal) {
 
-        String remainder = "";
-        int counter = 0;
-        int[] skArr = createIntArray(sk);
-        int[] dalArr = createIntArray(dal);
-        while(hasBiggerAbsoluteValue(skArr, dalArr) || hasEqualAbsoluteValues(skArr, dalArr)){
-            remainder = new StringBuffer(processSub(skArr, dalArr)).reverse().toString().replaceFirst("^0+(?!$)", "");
-            skArr = createIntArray(remainder);
-            counter++;
+        LielsSkaitlis counter = new LielsSkaitlis("0");
+
+        while (hasBiggerAbsoluteValue(this._intArray, dal.getLielsSkaitlisArray()) || hasEqualAbsoluteValues(this._intArray, dal.getLielsSkaitlisArray())) {
+            this.sub(dal);
+            counter.add(new LielsSkaitlis("1"));
         }
 
-        return new String[]{String.valueOf(counter), remainder};
+        return counter;
     }
+
+
+//    public String[] divide(String sk, String dal){
+//
+//        String remainder = "";
+//        int counter = 0;
+//        int[] skArr = createIntArray(sk);
+//        int[] dalArr = createIntArray(dal);
+//        while(hasBiggerAbsoluteValue(skArr, dalArr) || hasEqualAbsoluteValues(skArr, dalArr)){
+//            remainder = new StringBuffer(processSub(skArr, dalArr)).reverse().toString().replaceFirst("^0+(?!$)", "");
+//            skArr = createIntArray(remainder);
+//            counter++;
+//        }
+//
+//        return new String[]{String.valueOf(counter), remainder};
+//    }
 
     public String getLielsSkaitlis() {
         return skaitlis;
@@ -248,5 +279,7 @@ class LielsSkaitlis {
 
 
     // ================= Metodi display() modificet aizliegts!
-    public void display() {System.out.println(skaitlis);}
+    public void display() {
+        System.out.println(skaitlis);
+    }
 }
