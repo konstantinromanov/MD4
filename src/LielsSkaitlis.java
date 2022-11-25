@@ -1,5 +1,5 @@
-import java.security.DigestInputStream;
 import java.util.Arrays;
+import java.util.Vector;
 
 class LielsSkaitlis {
     private String skaitlis;
@@ -111,13 +111,13 @@ class LielsSkaitlis {
         String result = "";
         int carry = 0;
 
-        if (hasBiggerAbsoluteValue(sk1, sk)) {
+        if (hasGreaterAbsoluteValue(sk1, sk)) {
             biggestArr = sk1;
             smallestArr = sk;
             if (_sign.length() == 1) {
-                _sign = "";
-            } else {
                 _sign = "-";
+            } else {
+                _sign = "";
             }
         } else {
             biggestArr = sk;
@@ -143,6 +143,74 @@ class LielsSkaitlis {
 
         return result;
     }
+
+    public void multiply() {
+        int[] a = new int[]{1, 2};
+        int[] b = new int[]{1, 2};
+        String result = processMultiply(a, b);
+    }
+
+    private String processMultiply(int[] a, int[] b) {
+
+        // a = a.replaceFirst("^0+(?!$)", "");
+        //b = b.replaceFirst("^0+(?!$)", "");
+        Vector<Vector<Integer>> multArrPar = new Vector<>();
+
+        for (int i = b.length - 1; i >= 0; i--) {
+
+            Vector<Integer> multArrCh = new Vector<>();
+            int multCarr = 0;
+
+            for (int j = a.length - 1; j >= 0; j--) {
+
+                int multRes = b[i] * a[j] + multCarr;
+                multCarr = 0;
+
+                if (j == a.length - 1) {
+                    for (int k = 1; k < b.length - i; k++) {
+                        multArrCh.add(0);
+                    }
+                }
+
+                if (String.valueOf(multRes).length() > 1 && j != 0) {
+                    multCarr = multRes / 10;
+                    multRes -= multCarr * 10;
+                }
+
+                multArrCh.add(multRes);
+            }
+            multArrPar.add(multArrCh);
+        }
+
+        Vector<Integer> sumArr = new Vector<>();
+        int sumCarr = 0;
+
+        for (int i = 0; i < multArrPar.elementAt(multArrPar.size() - 1).size(); i++) {
+
+            int sumRes = 0;
+
+            for (int j = multArrPar.size() - 1; j >= 0; j--) {
+                if (i == multArrPar.elementAt(j).size()) {
+                    break;
+                }
+                sumRes += multArrPar.elementAt(j).elementAt(i);
+            }
+
+            sumRes += sumCarr;
+            sumCarr = 0;
+
+            if (String.valueOf(sumRes).length() > 1 && i != multArrPar.elementAt(multArrPar.size() - 1).size() - 1) {
+                sumCarr = sumRes / 10;
+                sumRes -= sumCarr * 10;
+            }
+
+            sumArr.add(sumRes);
+        }
+//        skaitlis = new StringBuffer(skaitlis).reverse().toString().replaceFirst("^0+(?!$)", "");
+        return new StringBuffer(sumArr.toString().replaceAll("\\[|\\]|,|\\s", ""))
+                .reverse().toString().replaceFirst("^0+(?!$)", "");
+    }
+
 
     private boolean isResultValid() {
 
@@ -174,7 +242,7 @@ class LielsSkaitlis {
         return false;
     }
 
-    private boolean hasBiggerAbsoluteValue(int[] sk2, int[] sk1) {
+    private boolean hasGreaterAbsoluteValue(int[] sk2, int[] sk1) {
 
         boolean isThisBigger = false;
 
@@ -197,23 +265,25 @@ class LielsSkaitlis {
         return isThisBigger;
     }
 
-//    public String findGcd(String sk, String dal){
-//
-//        int[] arr1 = createIntArray(sk);
-//        int[] arr2 = createIntArray(dal);
-//
-//        while(!hasEqualAbsoluteValues(arr1, arr2)){
-//            if (hasBiggerAbsoluteValue(arr1, arr2)){
-//                String dif = new StringBuffer(processSub(arr1, arr2)).reverse().toString().replaceFirst("^0+(?!$)", "");
-//                arr1 = createIntArray(dif);
-//            }else{
-//                String dif = new StringBuffer(processSub(arr2, arr1)).reverse().toString().replaceFirst("^0+(?!$)", "");
-//                arr2 = createIntArray(dif);
-//            }
-//        }
-//        String strOfInts = Arrays.toString(arr1).replaceAll("\\[|\\]|,|\\s", "");
-//        return strOfInts;
-//    }
+    public boolean isEqual(LielsSkaitlis sk) {
+        return this._sign.length() == sk.getSign().length() && this.hasEqualAbsoluteValues(this._intArray, sk.getLielsSkaitlisArray());
+    }
+
+    public boolean isGreater(LielsSkaitlis sk) {
+
+        if (this._sign.length() < sk.getSign().length()) {
+            return true;
+        } else if (this._sign.length() == 1 && this.hasGreaterAbsoluteValue(sk.getLielsSkaitlisArray(), this._intArray)) {
+            return true;
+        } else if (this._sign.length() == 0 && this.hasGreaterAbsoluteValue(this._intArray, sk.getLielsSkaitlisArray())) {
+            return true;
+        } else {
+            return false;
+        }
+//        return this._sign.length() < sk.getSign().length()
+//                || (this._sign.length() < sk.getSign().length() && this.hasGreaterAbsoluteValue(this._intArray, sk.getLielsSkaitlisArray()))
+//                || ;
+    }
 
     public String findGcd(LielsSkaitlis dal) {
 
@@ -221,7 +291,7 @@ class LielsSkaitlis {
         int[] arr2 = dal.getLielsSkaitlisArray();
 
         while (!hasEqualAbsoluteValues(arr1, arr2)) {
-            if (hasBiggerAbsoluteValue(arr1, arr2)) {
+            if (hasGreaterAbsoluteValue(arr1, arr2)) {
                 String dif = new StringBuffer(processSub(arr1, arr2)).reverse().toString().replaceFirst("^0+(?!$)", "");
                 arr1 = createIntArray(dif);
             } else {
@@ -229,37 +299,26 @@ class LielsSkaitlis {
                 arr2 = createIntArray(dif);
             }
         }
-        String strOfInts = Arrays.toString(arr1).replaceAll("\\[|\\]|,|\\s", "");
-        return strOfInts;
+        //String strOfInts = Arrays.toString(arr1).replaceAll("\\[|\\]|,|\\s", "");
+        return Arrays.toString(arr1).replaceAll("\\[|\\]|,|\\s", "");
     }
 
     public LielsSkaitlis divide(LielsSkaitlis dal) {
 
-        LielsSkaitlis counter = new LielsSkaitlis("0");
+        if (hasGreaterAbsoluteValue(dal.getLielsSkaitlisArray(), this._intArray)) {
+            return new LielsSkaitlis("0");
+        }
 
-        while (hasBiggerAbsoluteValue(this._intArray, dal.getLielsSkaitlisArray()) || hasEqualAbsoluteValues(this._intArray, dal.getLielsSkaitlisArray())) {
+        LielsSkaitlis counter = new LielsSkaitlis("1");
+
+        while (hasGreaterAbsoluteValue(this._intArray, dal.getLielsSkaitlisArray())
+                || !hasEqualAbsoluteValues(this._intArray, dal.getLielsSkaitlisArray())) {
             this.sub(dal);
             counter.add(new LielsSkaitlis("1"));
         }
 
         return counter;
     }
-
-
-//    public String[] divide(String sk, String dal){
-//
-//        String remainder = "";
-//        int counter = 0;
-//        int[] skArr = createIntArray(sk);
-//        int[] dalArr = createIntArray(dal);
-//        while(hasBiggerAbsoluteValue(skArr, dalArr) || hasEqualAbsoluteValues(skArr, dalArr)){
-//            remainder = new StringBuffer(processSub(skArr, dalArr)).reverse().toString().replaceFirst("^0+(?!$)", "");
-//            skArr = createIntArray(remainder);
-//            counter++;
-//        }
-//
-//        return new String[]{String.valueOf(counter), remainder};
-//    }
 
     public String getLielsSkaitlis() {
         return skaitlis;
