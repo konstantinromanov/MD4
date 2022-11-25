@@ -208,9 +208,18 @@ class LielsSkaitlis {
         }
 //        skaitlis = new StringBuffer(skaitlis).reverse().toString().replaceFirst("^0+(?!$)", "");
         return new StringBuffer(sumArr.toString().replaceAll("\\[|\\]|,|\\s", ""))
-                .reverse().toString().replaceFirst("^0+(?!$)", "");
+                .toString().replaceFirst("^0+(?!$)", "");
     }
 
+    public String findLcm(LielsSkaitlis sk) {
+        int[] arr1 = this._intArray;
+        int[] arr2 = sk.getLielsSkaitlisArray();
+        String gcd = this.findGcd(sk);
+        String lcmDiv = processDivide(arr1, this.createIntArray(gcd));
+        String lcm = this.processMultiply(arr2, this.createIntArray(lcmDiv));
+
+        return lcm;
+    }
 
     private boolean isResultValid() {
 
@@ -318,6 +327,21 @@ class LielsSkaitlis {
         }
 
         return counter;
+    }
+
+    private String processDivide(int[] sk1, int[] sk2) {
+
+        int[] arr1 = sk1;
+        int[] arr2 = sk2;
+        LielsSkaitlis counter = new LielsSkaitlis("1");
+        String remainder = Arrays.toString(sk1).replaceAll("\\[|\\]|,|\\s", "");
+        while (hasGreaterAbsoluteValue(arr1, arr2)
+                || !hasEqualAbsoluteValues(arr1, arr2)) {
+            arr1 = this.createIntArray(new StringBuffer(this.processSub(arr1, arr2)).reverse().toString().replaceFirst("^0+(?!$)", ""));
+            counter.add(new LielsSkaitlis("1"));
+        }
+        //return counter;
+        return Arrays.toString(counter.getLielsSkaitlisArray()).replaceAll("\\[|\\]|,|\\s", "");
     }
 
     public String getLielsSkaitlis() {

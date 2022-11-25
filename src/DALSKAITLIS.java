@@ -150,7 +150,7 @@ public class DALSKAITLIS {
     }
 
     public void add(DALSKAITLIS d) {
-
+        String gcd = this.skait.findLcm(new LielsSkaitlis("7"));
         this.skait.multiply();
     }
 
