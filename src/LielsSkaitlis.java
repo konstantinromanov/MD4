@@ -263,8 +263,10 @@ class LielsSkaitlis {
 //        String result = processMultiply(this._intArray, sk.getLielsSkaitlisArray());
         int[] result = processMultiply(this._intArray, sk.getLielsSkaitlisArray());
 
-        this.skaitlis = arrayToString(result);
+
         this._intArray = result;
+        this._sign = (this._sign + sk.getSign()).length() % 2 != 0 ? "-" : "";
+        this.skaitlis = this._sign + arrayToString(result);
     }
 
     private int[] processMultiply(int[] a, int[] b) {
@@ -439,34 +441,31 @@ class LielsSkaitlis {
             this._intArray = new int[]{0};
         }
 
-//        LielsSkaitlis counter = new LielsSkaitlis("1");
-//        int[] counter = new int[]{1};
-//        while (hasGreaterAbsoluteValue(this._intArray, dal.getLielsSkaitlisArray())) {
-//            //this.sub(dal);
-//            //counter.add(new LielsSkaitlis("1"));
-//            this._intArray = processDivide(this._intArray, dal.getLielsSkaitlisArray());
-//            counter = this.processAdd(counter, new int[]{1});
-//        }
 
         this._intArray = processDivide(_intArray, dal.getLielsSkaitlisArray());
-        this.skaitlis = arrayToString(this._intArray);
+        this._sign = (this._sign + dal.getSign()).length() % 2 != 0 ? "-" : "";
+        this.skaitlis = this._sign + arrayToString(this._intArray);
         //return new LielsSkaitlis(counter);
     }
 
-    private int[] processDivide(int[] sk1, int[] sk2) {
+    public String getAbs() {
+        return this._sign.length() > 0 ? this.skaitlis.substring(1) : this.skaitlis;
+    }
 
-        int[] arr1 = sk1;
-        int[] arr2 = sk2;
-//        LielsSkaitlis counter = new LielsSkaitlis("1");
-        int[] counter = new int[]{1};
+    private int[] processDivide(int[] arr1, int[] arr2) {
+
+        if (hasEqualAbsoluteValues(arr1, arr2)) {
+            return new int[]{1};
+        }
+
+        int[] counter = new int[]{0};
+
         while (hasGreaterAbsoluteValue(arr1, arr2)) {
-//            arr1 = this.createIntArray(new StringBuffer(this.processSub(arr1, arr2)).reverse().toString().replaceFirst("^0+(?!$)", ""));
             arr1 = this.processSub(arr1, arr2);
             counter = this.processAdd(counter, new int[]{1});
-//            counter.add(new LielsSkaitlis("1"));
         }
+
         return counter;
-//        return Arrays.toString(counter.getLielsSkaitlisArray()).replaceAll("\\[|\\]|,|\\s", "");
     }
 
     public String getLielsSkaitlis() {
