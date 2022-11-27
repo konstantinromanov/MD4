@@ -120,15 +120,21 @@ public class DALSKAITLIS {
 
     public void display() {
 
-        LielsSkaitlis wholeNumber = new LielsSkaitlis(this.skait.getAbs());
-        wholeNumber.divide(this.sauc);
+        LielsSkaitlis ls = new LielsSkaitlis(this.skait.getAbs());
 
-        String wholeNumberStr = wholeNumber.getLielsSkaitlis();
+        if(ls.isGreater(this.sauc)){
+            LielsSkaitlis wholeNumber = new LielsSkaitlis(this.skait.getAbs());
+            wholeNumber.divide(this.sauc);
 
-        LielsSkaitlis mod = new LielsSkaitlis(this.skait.getAbs());
-        String modStr = mod.getRemainder(this.sauc);
+            String wholeNumberStr = wholeNumber.getLielsSkaitlis();
 
-        System.out.println(this.skait.getSign() + wholeNumberStr + "_" + modStr + "/" + this.sauc.getLielsSkaitlis());
+            LielsSkaitlis mod = new LielsSkaitlis(this.skait.getAbs());
+            String modStr = mod.getRemainder(this.sauc);
+
+            System.out.println(this.skait.getSign() + wholeNumberStr + "_" + modStr + "/" + this.sauc.getLielsSkaitlis());
+        } else {
+            System.out.println(this.skait.getLielsSkaitlis() + "/" + this.sauc.getLielsSkaitlis());
+        }
     }
 
     public String[] getDalSkaitlis() {
