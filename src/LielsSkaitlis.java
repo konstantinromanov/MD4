@@ -24,13 +24,68 @@ class LielsSkaitlis {
         } else if (_IsAvailableForOperation) {
             String res = "";
             if ((sk.getSign() + _sign).length() % 2 == 0) {
-                res = processAdd(sk);
+                _intArray = processAdd(_intArray, sk.getLielsSkaitlisArray());
+                // res = arrayToString(_intArray);
             } else {
-                res = processSub(this._intArray, sk.getLielsSkaitlisArray());
+                if (!hasGreaterAbsoluteValue(_intArray, sk.getLielsSkaitlisArray())) {
+                    _sign = sk.getSign();
+                    _intArray = processSub(sk.getLielsSkaitlisArray(), this._intArray);
+                } else {
+                    _intArray = processSub(this._intArray, sk.getLielsSkaitlisArray());
+                    // res = arrayToString(_intArray);
+                }
             }
-            skaitlis = _sign + res;
-            reverse();
+            skaitlis = _sign + arrayToString(_intArray);
+            if (!isResultValid()) {
+                invalidateResult();
+            }
         }
+    }
+
+    private String arrayToString(int[] arr) {
+//        String test1 = Arrays.toString(arr).replaceAll("\\[|\\]|,|\\s", "");
+        return new StringBuffer(Arrays.toString(arr).replaceAll("\\[|\\]|,|\\s", ""))
+                .toString().replaceFirst("^0+(?!$)", "");
+    }
+
+    private int[] processAdd(int[] a, int[] b) {
+
+        int longestArrLength = (a.length <= b.length) ? b.length : a.length;
+        Vector<Integer> result = new Vector<>(longestArrLength + 1); // +1 is for carry in the end
+        int carry = 0;
+
+        for (int i = 0; i < longestArrLength; i++) {
+            int n1 = a.length - i <= 0 ? 0 : a[a.length - 1 - i];
+            int n2 = b.length <= i ? 0 : b[b.length - 1 - i];
+            int sum = n1 + n2 + carry;
+            carry = sum < 10 ? 0 : 1;
+            result.add(sum % 10);
+        }
+
+        result.add(carry);
+
+        return reverseVectorToArray(result);
+    }
+
+    private int[] reverseVectorToArray(Vector<Integer> vec) {
+
+        int countTrailingZeros = 0;
+
+        for (int i = vec.size() - 1; i >= 0; i--) {
+            if (vec.elementAt(i) == 0) {
+                countTrailingZeros++;
+            } else {
+                break;
+            }
+        }
+
+        int[] result = new int[vec.size() - countTrailingZeros];
+
+        for (int i = 0; i < result.length; i++) {
+            result[result.length - i - 1] = vec.elementAt(i);
+        }
+
+        return result;
     }
 
     public void sub(LielsSkaitlis sk) {
@@ -39,14 +94,29 @@ class LielsSkaitlis {
             skaitlis = sk.getLielsSkaitlis();
             _IsAvailableForOperation = false;
         } else if (_IsAvailableForOperation) {
-            String res = "";
+            // String res = "";
             if ((sk.getSign() + _sign).length() % 2 != 0) {
-                res = processAdd(sk);
+                _intArray = processAdd(_intArray, sk.getLielsSkaitlisArray());
+                // res = arrayToString(_intArray);
             } else {
-                res = processSub(this._intArray, sk.getLielsSkaitlisArray());
+
+                if (hasGreaterAbsoluteValue(_intArray, sk.getLielsSkaitlisArray())) {
+                    _intArray = processSub(this._intArray, sk.getLielsSkaitlisArray());
+                } else {
+                    _sign = "-";
+                    _intArray = processSub(sk.getLielsSkaitlisArray(), this._intArray);
+                }
+
+//                _intArray = processSub(this._intArray, sk.getLielsSkaitlisArray());
+                //res = arrayToString(_intArray);
             }
-            skaitlis = _sign + res;
-            reverse();
+
+            skaitlis = _sign + arrayToString(_intArray);
+
+            if (!isResultValid()) {
+                invalidateResult();
+            }
+//            reverse();
         }
     }
 
@@ -88,48 +158,50 @@ class LielsSkaitlis {
         return null;
     }
 
-    private String processAdd(LielsSkaitlis sk) {
+//    private String processAdd(LielsSkaitlis sk) {
+//
+//        int longestArrLength = (_intArray.length <= sk.getLielsSkaitlisArray().length) ? sk.getLielsSkaitlisArray().length : _intArray.length;
+//        String result = "";
+//        int carry = 0;
+//        for (int i = 0; i < longestArrLength; i++) {
+//            int n1 = _intArray.length - i <= 0 ? 0 : _intArray[_intArray.length - 1 - i];
+//            int n2 = sk.getLielsSkaitlisArray().length <= i ? 0 : sk.getLielsSkaitlisArray()[sk.getLielsSkaitlisArray().length - 1 - i];
+//            int sum = n1 + n2 + carry;
+//            carry = sum < 10 ? 0 : 1;
+//            result += sum % 10;
+//        }
+//
+//        result += carry;
+//
+//        return result;
+//    }
 
-        int longestArrLength = (_intArray.length <= sk.getLielsSkaitlisArray().length) ? sk.getLielsSkaitlisArray().length : _intArray.length;
-        String result = "";
+    private int[] processSub(int[] a, int[] b) {
+
+//        int[] smallestArr;
+//        int[] biggestArr;
+
         int carry = 0;
-        for (int i = 0; i < longestArrLength; i++) {
-            int n1 = _intArray.length - i <= 0 ? 0 : _intArray[_intArray.length - 1 - i];
-            int n2 = sk.getLielsSkaitlisArray().length <= i ? 0 : sk.getLielsSkaitlisArray()[sk.getLielsSkaitlisArray().length - 1 - i];
-            int sum = n1 + n2 + carry;
-            carry = sum < 10 ? 0 : 1;
-            result += sum % 10;
-        }
+//
+//        if (hasGreaterAbsoluteValue(sk1, sk)) {
+//            biggestArr = sk1;
+//            smallestArr = sk;
+//            if (_sign.length() == 1) {
+//                _sign = "-";
+//            } else {
+//                _sign = "";
+//            }
+//        } else {
+//            biggestArr = sk;
+//            smallestArr = sk1;
+//        }
 
-        result += carry;
+        Vector<Integer> result = new Vector<>(a.length);
 
-        return result;
-    }
+        for (int i = 0; i < a.length; i++) {
 
-    private String processSub(int[] sk1, int[] sk) {
-
-        int[] smallestArr;
-        int[] biggestArr;
-        String result = "";
-        int carry = 0;
-
-        if (hasGreaterAbsoluteValue(sk1, sk)) {
-            biggestArr = sk1;
-            smallestArr = sk;
-            if (_sign.length() == 1) {
-                _sign = "-";
-            } else {
-                _sign = "";
-            }
-        } else {
-            biggestArr = sk;
-            smallestArr = sk1;
-        }
-
-        for (int i = 0; i < biggestArr.length; i++) {
-
-            int n1 = biggestArr[biggestArr.length - 1 - i];
-            int n2 = smallestArr.length <= i ? 0 : smallestArr[smallestArr.length - 1 - i];
+            int n1 = a[a.length - 1 - i];
+            int n2 = b.length <= i ? 0 : b[b.length - 1 - i];
             int sum = 0;
 
             if (n1 >= n2 + carry) {
@@ -140,21 +212,62 @@ class LielsSkaitlis {
                 carry = 1;
             }
 
-            result += sum;
+            result.add(sum);
         }
 
-        return result;
+        return reverseVectorToArray(result);
     }
+
+//    private String processSub(int[] sk1, int[] sk) {
+//
+//        int[] smallestArr;
+//        int[] biggestArr;
+//        String result = "";
+//        int carry = 0;
+//
+//        if (hasGreaterAbsoluteValue(sk1, sk)) {
+//            biggestArr = sk1;
+//            smallestArr = sk;
+//            if (_sign.length() == 1) {
+//                _sign = "-";
+//            } else {
+//                _sign = "";
+//            }
+//        } else {
+//            biggestArr = sk;
+//            smallestArr = sk1;
+//        }
+//
+//        for (int i = 0; i < biggestArr.length; i++) {
+//
+//            int n1 = biggestArr[biggestArr.length - 1 - i];
+//            int n2 = smallestArr.length <= i ? 0 : smallestArr[smallestArr.length - 1 - i];
+//            int sum = 0;
+//
+//            if (n1 >= n2 + carry) {
+//                sum = n1 - (n2 + carry);
+//                carry = 0;
+//            } else {
+//                sum = 10 + n1 - (n2 + carry);
+//                carry = 1;
+//            }
+//
+//            result += sum;
+//        }
+//
+//        return result;
+//    }
 
     public void multiply(LielsSkaitlis sk) {
 
-        String result = processMultiply(this._intArray, sk.getLielsSkaitlisArray());
+//        String result = processMultiply(this._intArray, sk.getLielsSkaitlisArray());
+        int[] result = processMultiply(this._intArray, sk.getLielsSkaitlisArray());
 
-        this.skaitlis = result;
-        this._intArray = this.createIntArray(result);
+        this.skaitlis = arrayToString(result);
+        this._intArray = result;
     }
 
-    private String processMultiply(int[] a, int[] b) {
+    private int[] processMultiply(int[] a, int[] b) {
 
         // a = a.replaceFirst("^0+(?!$)", "");
         //b = b.replaceFirst("^0+(?!$)", "");
@@ -211,20 +324,25 @@ class LielsSkaitlis {
             sumVec.add(sumRes);
         }
 
-        Collections.reverse(sumVec);
-
-        return new StringBuffer(sumVec.toString().replaceAll("\\[|\\]|,|\\s", ""))
-                .toString().replaceFirst("^0+(?!$)", "");
+//        Collections.reverse(sumVec);
+        return reverseVectorToArray(sumVec);
+//        return new StringBuffer(sumVec.toString().replaceAll("\\[|\\]|,|\\s", ""))
+//                .toString().replaceFirst("^0+(?!$)", "");
     }
 
     public LielsSkaitlis findLcm(LielsSkaitlis sk) {
         int[] arr1 = this._intArray;
         int[] arr2 = sk.getLielsSkaitlisArray();
         String gcd = this.findGcd(sk);
-        String lcmDiv = processDivide(arr1, this.createIntArray(gcd));
-        String lcm = this.processMultiply(arr2, this.createIntArray(lcmDiv));
+        int[] lcmDiv = processDivide(arr1, this.createIntArray(gcd));
+        String lcm = arrayToString(this.processMultiply(arr2, lcmDiv));
 
         return new LielsSkaitlis(lcm);
+    }
+
+    private void invalidateResult() {
+        skaitlis = _sign.length() == 0 ? "SKAITLIS PAR LIELU" : "SKAITLIS PAR MAZU";
+        _IsAvailableForOperation = false;
     }
 
     private boolean isResultValid() {
@@ -232,10 +350,7 @@ class LielsSkaitlis {
         boolean result = false;
 
         if ((skaitlis.length() > 20 || skaitlis.length() < 1)) {
-
-            skaitlis = _sign.length() == 0 ? "SKAITLIS PAR LIELU" : "SKAITLIS PAR MAZU";
-            _IsAvailableForOperation = false;
-
+            invalidateResult();
         } else {
             result = true;
         }
@@ -302,45 +417,56 @@ class LielsSkaitlis {
 
         while (!hasEqualAbsoluteValues(arr1, arr2)) {
             if (hasGreaterAbsoluteValue(arr1, arr2)) {
-                String dif = new StringBuffer(processSub(arr1, arr2)).reverse().toString().replaceFirst("^0+(?!$)", "");
-                arr1 = createIntArray(dif);
+                //String dif = new StringBuffer(processSub(arr1, arr2)).reverse().toString().replaceFirst("^0+(?!$)", "");
+                //String dif = arrayToString()
+//                arr1 = createIntArray(dif);
+                arr1 = processSub(arr1, arr2);
             } else {
-                String dif = new StringBuffer(processSub(arr2, arr1)).reverse().toString().replaceFirst("^0+(?!$)", "");
-                arr2 = createIntArray(dif);
+//                String dif = new StringBuffer(processSub(arr2, arr1)).reverse().toString().replaceFirst("^0+(?!$)", "");
+//                arr2 = createIntArray(dif);
+                arr2 = processSub(arr2, arr1);
             }
         }
 
         return Arrays.toString(arr1).replaceAll("\\[|\\]|,|\\s", "");
     }
 
-    public LielsSkaitlis divide(LielsSkaitlis dal) {
+    public void divide(LielsSkaitlis dal) {
 
         if (hasGreaterAbsoluteValue(dal.getLielsSkaitlisArray(), this._intArray)) {
-            return new LielsSkaitlis("0");
+            //return new LielsSkaitlis("0");
+            this.skaitlis = "0";
+            this._intArray = new int[]{0};
         }
 
-        LielsSkaitlis counter = new LielsSkaitlis("1");
+//        LielsSkaitlis counter = new LielsSkaitlis("1");
+//        int[] counter = new int[]{1};
+//        while (hasGreaterAbsoluteValue(this._intArray, dal.getLielsSkaitlisArray())) {
+//            //this.sub(dal);
+//            //counter.add(new LielsSkaitlis("1"));
+//            this._intArray = processDivide(this._intArray, dal.getLielsSkaitlisArray());
+//            counter = this.processAdd(counter, new int[]{1});
+//        }
 
-        while (hasGreaterAbsoluteValue(this._intArray, dal.getLielsSkaitlisArray())) {
-            this.sub(dal);
-            counter.add(new LielsSkaitlis("1"));
-        }
-
-        return counter;
+        this._intArray = processDivide(_intArray, dal.getLielsSkaitlisArray());
+        this.skaitlis = arrayToString(this._intArray);
+        //return new LielsSkaitlis(counter);
     }
 
-    private String processDivide(int[] sk1, int[] sk2) {
+    private int[] processDivide(int[] sk1, int[] sk2) {
 
         int[] arr1 = sk1;
         int[] arr2 = sk2;
-        LielsSkaitlis counter = new LielsSkaitlis("1");
-
+//        LielsSkaitlis counter = new LielsSkaitlis("1");
+        int[] counter = new int[]{1};
         while (hasGreaterAbsoluteValue(arr1, arr2)) {
-            arr1 = this.createIntArray(new StringBuffer(this.processSub(arr1, arr2)).reverse().toString().replaceFirst("^0+(?!$)", ""));
-            counter.add(new LielsSkaitlis("1"));
+//            arr1 = this.createIntArray(new StringBuffer(this.processSub(arr1, arr2)).reverse().toString().replaceFirst("^0+(?!$)", ""));
+            arr1 = this.processSub(arr1, arr2);
+            counter = this.processAdd(counter, new int[]{1});
+//            counter.add(new LielsSkaitlis("1"));
         }
-
-        return Arrays.toString(counter.getLielsSkaitlisArray()).replaceAll("\\[|\\]|,|\\s", "");
+        return counter;
+//        return Arrays.toString(counter.getLielsSkaitlisArray()).replaceAll("\\[|\\]|,|\\s", "");
     }
 
     public String getLielsSkaitlis() {
