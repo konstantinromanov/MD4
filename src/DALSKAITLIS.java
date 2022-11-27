@@ -7,25 +7,20 @@ public class DALSKAITLIS {
 //        d[0] = new DALSKAITLIS(args[0], args[1]);
 //        d[1] = new DALSKAITLIS(args[2], args[3]);
 //        d[2] = new DALSKAITLIS(args[4]);
-
-//        for (DALSKAITLIS tmpD : d) tmpD.display();
 //
-//        if (d[0].isGreater(d[1])) {
-//            dSk = d[0];
-//            d[0] = d[1];
-//            d[1] = dSk;
-//        }
+//        for(DALSKAITLIS tmpD : d) tmpD.display();
+//
+//        if (d[0].isGreater(d[1])) {dSk = d[0]; d[0] = d[1]; d[1] = dSk; }
 //
 //        d[0].divide(d[1]);
 //        d[1].add(d[0]);
 //        d[2].divide(d[1]);
 //
-//        for (DALSKAITLIS tmpD : d) tmpD.display();
+//        for(DALSKAITLIS tmpD : d) tmpD.display();
 //
 //        System.out.println(d[0].isEqual(d[1]));
 //        System.out.println(d[1].isEqual(d[2]));
 //        System.out.println(d[2].isEqual(d[2]));
-
         // addition tests
         LielsSkaitlis lielsSkaitlis11 = new LielsSkaitlis("0");
         LielsSkaitlis lielsSkaitlis21 = new LielsSkaitlis("56");
@@ -121,13 +116,13 @@ public class DALSKAITLIS {
         System.out.println("test26: " + lielsSkaitlis217.getLielsSkaitlis().equals("SKAITLIS PAR LIELU"));
 
         //-------------------------------- DalSkaitlis tests -----------------------------
-
+//
         DALSKAITLIS dalskaitlis11 = new DALSKAITLIS("2", "4");
         DALSKAITLIS dalskaitlis12 = new DALSKAITLIS("1", "8");
         dalskaitlis11.add(dalskaitlis12);
         System.out.println(dalskaitlis11.getSkait().getLielsSkaitlis().equals("5")
                 && dalskaitlis11.getSauc().getLielsSkaitlis().equals("8"));
-        DALSKAITLIS dalskaitlis21 = new DALSKAITLIS("-1", "2");
+        DALSKAITLIS dalskaitlis21 = new DALSKAITLIS("-1", "2"); // not stopping
         DALSKAITLIS dalskaitlis22 = new DALSKAITLIS("-2", "2");
         dalskaitlis21.add(dalskaitlis22);
         System.out.println(dalskaitlis21.getSkait().getLielsSkaitlis().equals("-3")
@@ -142,7 +137,7 @@ public class DALSKAITLIS {
         dalskaitlis41.divide(dalskaitlis42);
         System.out.println(dalskaitlis41.getSkait().getLielsSkaitlis().equals("-4")
                 && dalskaitlis41.getSauc().getLielsSkaitlis().equals("1"));
-        DALSKAITLIS dalskaitlis51 = new DALSKAITLIS("2434", "844");
+        DALSKAITLIS dalskaitlis51 = new DALSKAITLIS("2434", "844"); // not stopping
         DALSKAITLIS dalskaitlis52 = new DALSKAITLIS("203", "500");
         dalskaitlis51.add(dalskaitlis52);
         System.out.println(dalskaitlis51.getSkait().getLielsSkaitlis().equals("347083")
@@ -179,7 +174,6 @@ public class DALSKAITLIS {
 
     private LielsSkaitlis skait;
     private LielsSkaitlis sauc;
-    //private String sign = "";
 
     public DALSKAITLIS(String skait, String sauc) {
 
@@ -275,20 +269,15 @@ public class DALSKAITLIS {
 
     public void display() {
 
-        LielsSkaitlis a = new LielsSkaitlis(this.skait.getAbs());
-        a.divide(this.sauc);
+        LielsSkaitlis wholeNumber = new LielsSkaitlis(this.skait.getAbs());
+        wholeNumber.divide(this.sauc);
 
-        String wholeNumberStr = a.getLielsSkaitlis();
+        String wholeNumberStr = wholeNumber.getLielsSkaitlis();
 
-        LielsSkaitlis b = new LielsSkaitlis(wholeNumberStr);
-        b.multiply(this.sauc);
+        LielsSkaitlis mod = new LielsSkaitlis(this.skait.getAbs());
+        String modStr = mod.getRemainder(this.sauc);
 
-        LielsSkaitlis c = new LielsSkaitlis(this.skait.getAbs());
-        c.sub(b);
-
-        String simplSkaitStr = c.getAbs();
-
-        System.out.println(this.skait.getSign() + wholeNumberStr + "_" + simplSkaitStr + "/" + this.sauc.getLielsSkaitlis());
+        System.out.println(this.skait.getSign() + wholeNumberStr + "_" + modStr + "/" + this.sauc.getLielsSkaitlis());
     }
 
     public String[] getDalSkaitlis() {
