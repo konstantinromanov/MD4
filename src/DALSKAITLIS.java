@@ -8,15 +8,19 @@ public class DALSKAITLIS {
         d[1] = new DALSKAITLIS(args[2], args[3]);
         d[2] = new DALSKAITLIS(args[4]);
 
-        for(DALSKAITLIS tmpD : d) tmpD.display();
+        for (DALSKAITLIS tmpD : d) tmpD.display();
 
-        if (d[0].isGreater(d[1])) {dSk = d[0]; d[0] = d[1]; d[1] = dSk; }
+        if (d[0].isGreater(d[1])) {
+            dSk = d[0];
+            d[0] = d[1];
+            d[1] = dSk;
+        }
 
         d[0].divide(d[1]);
         d[1].add(d[0]);
         d[2].divide(d[1]);
 
-        for(DALSKAITLIS tmpD : d) tmpD.display();
+        for (DALSKAITLIS tmpD : d) tmpD.display();
 
         System.out.println(d[0].isEqual(d[1]));
         System.out.println(d[1].isEqual(d[2]));
@@ -122,7 +126,9 @@ public class DALSKAITLIS {
 
         LielsSkaitlis ls = new LielsSkaitlis(this.skait.getAbs());
 
-        if(ls.isGreater(this.sauc)){
+        if (this.sauc.getLielsSkaitlis().equals("1")) {
+            System.out.println(this.skait.getLielsSkaitlis());
+        } else if (ls.isGreater(this.sauc)) {
             LielsSkaitlis wholeNumber = new LielsSkaitlis(this.skait.getAbs());
             wholeNumber.divide(this.sauc);
 
