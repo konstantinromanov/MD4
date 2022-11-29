@@ -242,11 +242,19 @@ class LielsSkaitlis {
 
             sumVec.add(sumRes);
         }
+        // split last element if it has more than 1 digit in it
+        if (sumVec.lastElement() > 9){
+            int lastEl1 = sumVec.lastElement() / 10;
+            int lastEl2 = sumVec.lastElement() % 10;
+            sumVec.removeElementAt(sumVec.size() - 1);
+            sumVec.add(lastEl2);
+            sumVec.add(lastEl1);
+        }
 
         return reverseVectorToArray(sumVec);
     }
 
-    public String getRemainder(LielsSkaitlis sk){
+    public String getRemainder(LielsSkaitlis sk) {
 
         int[] arr1 = this._intArray;
 
@@ -256,28 +264,81 @@ class LielsSkaitlis {
 
         return arrayToString(arr1);
     }
+
     public void divide(LielsSkaitlis dal) {
+        String remainder = checkDivisorAndHandleDivisionResult(dal);
+    }
+
+    public String divideAndGetRemainder(LielsSkaitlis dal) {
+        return checkDivisorAndHandleDivisionResult(dal);
+    }
+
+    private String checkDivisorAndHandleDivisionResult(LielsSkaitlis dal){
+
+        if (dal.getLielsSkaitlis().equals("0")){
+            return "0";
+        }
 
         if (hasGreaterAbsoluteValue(dal.getLielsSkaitlisArray(), this._intArray)) {
             this.skaitlis = "0";
             this._intArray = new int[]{0};
         }
 
-        this._intArray = processDivide(_intArray, dal.getLielsSkaitlisArray());
+        int[][] result = processDivide(_intArray, dal.getLielsSkaitlisArray());
+        this._intArray = result[0];
         this._sign = (this._sign + dal.getSign()).length() % 2 != 0 ? "-" : "";
         this.skaitlis = this._sign + arrayToString(this._intArray);
+
+        return arrayToString(result[1]);
     }
 
-    private int[] processDivide(int[] arr1, int[] arr2) {
+    private int[][] processDivide(int[] divident, int[] divisor) {
 
-        int[] counter = new int[]{0};
+        Vector<Integer> resultVec = new Vector<Integer>(divident.length);
+        int[] tempDivident = new int[divisor.length];
 
-        while (hasGreaterAbsoluteValue(arr1, arr2) || hasEqualAbsoluteValues(arr1, arr2)) {
-            arr1 = this.processSub(arr1, arr2);
-            counter = this.processAdd(counter, new int[]{1});
+        for (int i = 0; i < tempDivident.length; i++) {
+            tempDivident[i] = divident[i];
         }
 
-        return counter;
+        if (hasGreaterAbsoluteValue(divisor, tempDivident)) {
+            tempDivident = new int[divisor.length + 1];
+            for (int i = 0; i < tempDivident.length; i++) {
+                tempDivident[i] = divident[i];
+            }
+        }
+
+        int position = tempDivident.length;
+
+        while (true) {
+
+            int counter = 0;
+
+            while (hasGreaterAbsoluteValue(tempDivident, divisor) || hasEqualAbsoluteValues(tempDivident, divisor)) {
+                tempDivident = this.processSub(tempDivident, divisor);
+                counter++;
+            }
+
+            resultVec.add(counter);
+
+            if (position == divident.length) {
+                break;
+            }
+
+            tempDivident = Arrays.copyOf(tempDivident, tempDivident.length + 1);
+            tempDivident[tempDivident.length - 1] = divident[position];
+            position++;
+        }
+
+        int[] resultArr = new int[resultVec.size()];
+
+        for (int i = 0; i < resultArr.length; i++) {
+            resultArr[i] = resultVec.elementAt(i);
+        }
+
+        int[][] result = new int[][]{resultArr, tempDivident.length > 0 ? tempDivident : new int[]{0}};
+
+        return result;
     }
 
     public LielsSkaitlis findLcm(LielsSkaitlis sk) {
@@ -285,7 +346,7 @@ class LielsSkaitlis {
         int[] arr1 = this._intArray;
         int[] arr2 = sk.getLielsSkaitlisArray();
         String gcd = this.findGcd(sk);
-        int[] lcmDiv = processDivide(arr1, this.createIntArray(gcd));
+        int[] lcmDiv = processDivide(arr1, this.createIntArray(gcd))[0];
         String lcm = arrayToString(this.processMultiply(arr2, lcmDiv));
 
         return new LielsSkaitlis(lcm);
@@ -352,7 +413,7 @@ class LielsSkaitlis {
 
         if (this._sign.length() < sk.getSign().length()
                 || this._sign.length() == 1 && this.hasGreaterAbsoluteValue(sk.getLielsSkaitlisArray(), this._intArray)
-                || this._sign.length() == 0 && this.hasGreaterAbsoluteValue(this._intArray, sk.getLielsSkaitlisArray())){
+                || this._sign.length() == 0 && this.hasGreaterAbsoluteValue(this._intArray, sk.getLielsSkaitlisArray())) {
             return true;
         } else {
             return false;
@@ -361,21 +422,26 @@ class LielsSkaitlis {
 
     public String findGcd(LielsSkaitlis dal) {
 
-        int[] arr1 = this._intArray;
-        int[] arr2 = dal.getLielsSkaitlisArray();
+        int[] arr1;
+        int[] arr2;
 
-        while (!hasEqualAbsoluteValues(arr1, arr2)) {
-            if (hasGreaterAbsoluteValue(arr1, arr2)) {
-                arr1 = processSub(arr1, arr2);
-            } else {
-                arr2 = processSub(arr2, arr1);
-            }
+        if (hasGreaterAbsoluteValue(this._intArray, dal.getLielsSkaitlisArray())){
+            arr1 = this._intArray;
+            arr2 = dal.getLielsSkaitlisArray();
+        } else {
+            arr2 = this._intArray;
+            arr1 = dal.getLielsSkaitlisArray();
+        }
+
+        while (!hasEqualAbsoluteValues(arr2, new int[]{0})) {
+
+            int[] t = arr2;
+            arr2 = processDivide(arr1, arr2)[1];
+            arr1 = t;
         }
 
         return arrayToString(arr1);
     }
-
-
 
     public String getAbs() {
         return this._sign.length() > 0 ? this.skaitlis.substring(1) : this.skaitlis;
@@ -396,7 +462,6 @@ class LielsSkaitlis {
     public boolean isAvailableForOperation() {
         return _IsAvailableForOperation;
     }
-
 
     // ================= Metodi display() modificet aizliegts!
     public void display() {

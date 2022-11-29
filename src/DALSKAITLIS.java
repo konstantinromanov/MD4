@@ -125,22 +125,20 @@ public class DALSKAITLIS {
     public void display() {
 
         LielsSkaitlis ls = new LielsSkaitlis(this.skait.getAbs());
+        String output = "";
 
         if (this.sauc.getLielsSkaitlis().equals("1")) {
-            System.out.println(this.skait.getLielsSkaitlis());
+            output = this.skait.getLielsSkaitlis();
         } else if (ls.isGreater(this.sauc)) {
             LielsSkaitlis wholeNumber = new LielsSkaitlis(this.skait.getAbs());
-            wholeNumber.divide(this.sauc);
-
+            String modStr =  wholeNumber.divideAndGetRemainder(this.sauc);
             String wholeNumberStr = wholeNumber.getLielsSkaitlis();
-
-            LielsSkaitlis mod = new LielsSkaitlis(this.skait.getAbs());
-            String modStr = mod.getRemainder(this.sauc);
-
-            System.out.println(this.skait.getSign() + wholeNumberStr + "_" + modStr + "/" + this.sauc.getLielsSkaitlis());
+            output = this.skait.getSign() + wholeNumberStr + "_" + modStr + "/" + this.sauc.getLielsSkaitlis();
         } else {
-            System.out.println(this.skait.getLielsSkaitlis() + "/" + this.sauc.getLielsSkaitlis());
+            output = this.skait.getLielsSkaitlis() + "/" + this.sauc.getLielsSkaitlis();
         }
+
+        System.out.println(output);
     }
 
     public String[] getDalSkaitlis() {
