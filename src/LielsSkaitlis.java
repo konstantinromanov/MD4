@@ -190,11 +190,11 @@ class LielsSkaitlis {
 
     private int[] processMultiply(int[] a, int[] b) {
 
-        Vector<Vector<Integer>> multVecPar = new Vector<>();
+        Vector<Vector<Integer>> multVecPar = new Vector<>(b.length);
 
         for (int i = b.length - 1; i >= 0; i--) {
 
-            Vector<Integer> multArrCh = new Vector<>();
+            Vector<Integer> multArrCh = new Vector<>(a.length + 1);
             int multCarr = 0;
 
             for (int j = a.length - 1; j >= 0; j--) {
@@ -208,17 +208,18 @@ class LielsSkaitlis {
                     }
                 }
 
-                if (String.valueOf(multRes).length() > 1 && j != 0) {
+                if (multRes > 9) {
                     multCarr = multRes / 10;
                     multRes -= multCarr * 10;
                 }
 
                 multArrCh.add(multRes);
             }
+            multArrCh.add(multCarr);
             multVecPar.add(multArrCh);
         }
 
-        Vector<Integer> sumVec = new Vector<>();
+        Vector<Integer> sumVec = new Vector<>(a.length + b.length);
         int sumCarr = 0;
 
         for (int i = 0; i < multVecPar.elementAt(multVecPar.size() - 1).size(); i++) {
@@ -235,21 +236,15 @@ class LielsSkaitlis {
             sumRes += sumCarr;
             sumCarr = 0;
 
-            if (String.valueOf(sumRes).length() > 1 && i != multVecPar.elementAt(multVecPar.size() - 1).size() - 1) {
+            if (sumRes > 9) {
                 sumCarr = sumRes / 10;
                 sumRes -= sumCarr * 10;
             }
 
             sumVec.add(sumRes);
         }
-        // split last element if it has more than 1 digit in it
-        if (sumVec.lastElement() > 9){
-            int lastEl1 = sumVec.lastElement() / 10;
-            int lastEl2 = sumVec.lastElement() % 10;
-            sumVec.removeElementAt(sumVec.size() - 1);
-            sumVec.add(lastEl2);
-            sumVec.add(lastEl1);
-        }
+
+        sumVec.add(sumCarr);
 
         return reverseVectorToArray(sumVec);
     }
