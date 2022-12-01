@@ -188,9 +188,70 @@ class LielsSkaitlis {
         this.skaitlis = this._sign + arrayToString(result);
     }
 
+//    private int[] processMultiply(int[] a, int[] b) {
+//
+//        Vector<Vector<Integer>> multVecPar = new Vector<>(b.length);
+//
+//        for (int i = b.length - 1; i >= 0; i--) {
+//
+//            Vector<Integer> multArrCh = new Vector<>(a.length + 1);
+//            int multCarr = 0;
+//
+//            for (int j = a.length - 1; j >= 0; j--) {
+//
+//                int multRes = b[i] * a[j] + multCarr;
+//                multCarr = 0;
+//
+//                if (j == a.length - 1) {
+//                    for (int k = 1; k < b.length - i; k++) {
+//                        multArrCh.add(0);
+//                    }
+//                }
+//
+//                if (multRes > 9) {
+//                    multCarr = multRes / 10;
+//                    multRes -= multCarr * 10;
+//                }
+//
+//                multArrCh.add(multRes);
+//            }
+//            multArrCh.add(multCarr);
+//            multVecPar.add(multArrCh);
+//        }
+//
+//        Vector<Integer> sumVec = new Vector<>(a.length + b.length);
+//        int sumCarr = 0;
+//
+//        for (int i = 0; i < multVecPar.elementAt(multVecPar.size() - 1).size(); i++) {
+//
+//            int sumRes = 0;
+//
+//            for (int j = multVecPar.size() - 1; j >= 0; j--) {
+//                if (i == multVecPar.elementAt(j).size()) {
+//                    break;
+//                }
+//                sumRes += multVecPar.elementAt(j).elementAt(i);
+//            }
+//
+//            sumRes += sumCarr;
+//            sumCarr = 0;
+//
+//            if (sumRes > 9) {
+//                sumCarr = sumRes / 10;
+//                sumRes -= sumCarr * 10;
+//            }
+//
+//            sumVec.add(sumRes);
+//        }
+//
+//        sumVec.add(sumCarr);
+//
+//        return reverseVectorToArray(sumVec);
+//    }
+
     private int[] processMultiply(int[] a, int[] b) {
 
-        Vector<Vector<Integer>> multVecPar = new Vector<>(b.length);
+        Vector<Integer> resultVec = new Vector<>();
 
         for (int i = b.length - 1; i >= 0; i--) {
 
@@ -215,49 +276,35 @@ class LielsSkaitlis {
 
                 multArrCh.add(multRes);
             }
+
             multArrCh.add(multCarr);
-            multVecPar.add(multArrCh);
-        }
 
-        Vector<Integer> sumVec = new Vector<>(a.length + b.length);
-        int sumCarr = 0;
+            int carry = 0;
+            Vector<Integer> resultTemp = new Vector<>(multArrCh.size() + 1);
 
-        for (int i = 0; i < multVecPar.elementAt(multVecPar.size() - 1).size(); i++) {
+            for (int j = 0; j < multArrCh.size(); j++) {
 
-            int sumRes = 0;
+                int n1 = multArrCh.elementAt(j);
+                int n2 = j < resultVec.size() ? resultVec.elementAt(j) : 0;
+                int sum = n1 + n2 + carry;
 
-            for (int j = multVecPar.size() - 1; j >= 0; j--) {
-                if (i == multVecPar.elementAt(j).size()) {
-                    break;
-                }
-                sumRes += multVecPar.elementAt(j).elementAt(i);
+                carry = sum > 9 ? 1 : 0;
+                resultTemp.add(sum % 10);
             }
 
-            sumRes += sumCarr;
-            sumCarr = 0;
-
-            if (sumRes > 9) {
-                sumCarr = sumRes / 10;
-                sumRes -= sumCarr * 10;
-            }
-
-            sumVec.add(sumRes);
+            resultTemp.add(carry);
+            resultVec = resultTemp;
         }
 
-        sumVec.add(sumCarr);
-
-        return reverseVectorToArray(sumVec);
+        return reverseVectorToArray(resultVec);
     }
 
     public String getRemainder(LielsSkaitlis sk) {
 
         int[] arr1 = this._intArray;
+        int[][] result = processDivide(arr1, sk.getLielsSkaitlisArray());
 
-        while (hasGreaterAbsoluteValue(arr1, sk.getLielsSkaitlisArray()) || hasEqualAbsoluteValues(arr1, sk.getLielsSkaitlisArray())) {
-            arr1 = this.processSub(arr1, sk.getLielsSkaitlisArray());
-        }
-
-        return arrayToString(arr1);
+        return arrayToString(result[1]);
     }
 
     public void divide(LielsSkaitlis dal) {
@@ -271,7 +318,7 @@ class LielsSkaitlis {
     private String checkDivisorAndHandleDivisionResult(LielsSkaitlis dal){
 
         if (dal.getLielsSkaitlis().equals("0")){
-            return "0";
+            throw new ArithmeticException("/ by 0");
         }
 
         if (hasGreaterAbsoluteValue(dal.getLielsSkaitlisArray(), this._intArray)) {
@@ -289,7 +336,7 @@ class LielsSkaitlis {
 
     private int[][] processDivide(int[] divident, int[] divisor) {
 
-        Vector<Integer> resultVec = new Vector<Integer>(divident.length);
+        Vector<Integer> resultVec = new Vector<>(divident.length);
         int[] tempDivident = new int[divisor.length];
 
         for (int i = 0; i < tempDivident.length; i++) {
