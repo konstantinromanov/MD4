@@ -188,67 +188,6 @@ class LielsSkaitlis {
         this.skaitlis = this._sign + arrayToString(result);
     }
 
-//    private int[] processMultiply(int[] a, int[] b) {
-//
-//        Vector<Vector<Integer>> multVecPar = new Vector<>(b.length);
-//
-//        for (int i = b.length - 1; i >= 0; i--) {
-//
-//            Vector<Integer> multArrCh = new Vector<>(a.length + 1);
-//            int multCarr = 0;
-//
-//            for (int j = a.length - 1; j >= 0; j--) {
-//
-//                int multRes = b[i] * a[j] + multCarr;
-//                multCarr = 0;
-//
-//                if (j == a.length - 1) {
-//                    for (int k = 1; k < b.length - i; k++) {
-//                        multArrCh.add(0);
-//                    }
-//                }
-//
-//                if (multRes > 9) {
-//                    multCarr = multRes / 10;
-//                    multRes -= multCarr * 10;
-//                }
-//
-//                multArrCh.add(multRes);
-//            }
-//            multArrCh.add(multCarr);
-//            multVecPar.add(multArrCh);
-//        }
-//
-//        Vector<Integer> sumVec = new Vector<>(a.length + b.length);
-//        int sumCarr = 0;
-//
-//        for (int i = 0; i < multVecPar.elementAt(multVecPar.size() - 1).size(); i++) {
-//
-//            int sumRes = 0;
-//
-//            for (int j = multVecPar.size() - 1; j >= 0; j--) {
-//                if (i == multVecPar.elementAt(j).size()) {
-//                    break;
-//                }
-//                sumRes += multVecPar.elementAt(j).elementAt(i);
-//            }
-//
-//            sumRes += sumCarr;
-//            sumCarr = 0;
-//
-//            if (sumRes > 9) {
-//                sumCarr = sumRes / 10;
-//                sumRes -= sumCarr * 10;
-//            }
-//
-//            sumVec.add(sumRes);
-//        }
-//
-//        sumVec.add(sumCarr);
-//
-//        return reverseVectorToArray(sumVec);
-//    }
-
     private int[] processMultiply(int[] a, int[] b) {
 
         Vector<Integer> resultVec = new Vector<>();
